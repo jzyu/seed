@@ -1,0 +1,36 @@
+# built application files
+*.apk
+*.ap_
+
+# files for the dex VM
+*.dex
+*.iml
+
+# Java class files
+*.class
+
+# generated files
+bin/
+build/
+gen/
+target/
+gradle/
+Weplant/build
+TabLib/build
+TabLib/src/androidTest
+TabLib/.gitignore
+gradlew
+gradlew.bat
+
+# Local configuration file (sdk path, etc)
+local.properties
+
+# Eclipse project files
+.classpath
+.project
+.gradle
+.idea
+
+# Mac os
+.DS_Store
+gen-external-apklibs

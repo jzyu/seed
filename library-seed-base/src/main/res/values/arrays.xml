@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer-array name="seed_google_colors">
+        <item>@color/seed_ptr_color_green</item>
+    </integer-array>
+</resources>
