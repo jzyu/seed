@@ -20,4 +20,8 @@ public class HttpLoadListCallback <API_DATA_TYPE, ITEM_TYPE> {
     public void onAfterUpdate(Response<API_DATA_TYPE> response) {
 
     }
+
+    public void onUpdateError(int responseCode, String errorMsg) {
+
+    }
 }

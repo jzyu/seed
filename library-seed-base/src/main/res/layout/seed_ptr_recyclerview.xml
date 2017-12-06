@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     xmlns:custom="http://schemas.android.com/apk/res-auto">
 
-    <in.srain.cube.views.ptr.PtrFrameLayout
+    <com.github.jzyu.library.seed.ui.view.SeedPtrFrameLayout
         android:id="@+id/ptr_frame"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -18,8 +18,13 @@
         <cn.finalteam.loadingviewfinal.RecyclerViewFinal
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </in.srain.cube.views.ptr.PtrFrameLayout>
+            android:layout_height="match_parent"
+            android:scrollbars="vertical"
+            android:scrollbarSize="3dp"
+            android:scrollbarThumbVertical="@android:color/darker_gray"
+            android:scrollbarTrackVertical="@android:color/white"
+            />
+    </com.github.jzyu.library.seed.ui.view.SeedPtrFrameLayout>
 
     <FrameLayout
         android:id="@+id/container_empty"

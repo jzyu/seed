@@ -17,7 +17,7 @@ import java.util.List;
 
 public abstract class SeedPtrListFragment<T, API_SET_CLASS>
         extends SeedPtrRecyclerViewFragment<T, API_SET_CLASS>
-        implements SeedPtrRecyclerViewFragment.RowConvert<T> {
+        implements IRowConvert<T> {
 
     protected ConfigBuilder<T> getBuilder(int rowLayoutId, List<T> items) {
         MultiItemTypeAdapter<T> adapter = new CommonAdapter<T>(getContext(), rowLayoutId, items) {

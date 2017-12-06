@@ -7,8 +7,15 @@ import android.net.NetworkInfo;
 import android.os.Build;
 import android.util.TypedValue;
 import android.view.View;
+import android.view.ViewGroup;
+
+import com.github.jzyu.library.seed.R;
 
 import java.util.Collection;
+
+import in.srain.cube.views.ptr.PtrFrameLayout;
+import in.srain.cube.views.ptr.PtrUIHandler;
+import in.srain.cube.views.ptr.header.MaterialHeader;
 
 /**
  * Author: jzyu
@@ -69,5 +76,18 @@ public class SeedUtil {
     @SuppressWarnings("unchecked")
     public static <T extends View> T findById(View view, int id) {
         return (T) view.findViewById(id);
+    }
+
+    public static PtrUIHandler newPtrUIMaterial(Context context, PtrFrameLayout ptrContainer) {
+        MaterialHeader header = new MaterialHeader(context);
+
+        header.setLayoutParams(new PtrFrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT));
+        header.setPadding(0, dp2px(context, 12), 0, dp2px(context, 12));
+        header.setPtrFrameLayout(ptrContainer);
+        header.setColorSchemeColors(context.getResources().getIntArray(R.array.seed_google_colors));
+
+        return header;
     }
 }

@@ -1,6 +1,5 @@
 package com.github.jzyu.library.seed.ui.ptr;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,7 +20,6 @@ import com.github.jzyu.library.seed.util.Callback;
 import com.github.jzyu.library.seed.util.SeedConsts;
 import com.github.jzyu.library.seed.util.SeedUtil;
 import com.zhy.adapter.recyclerview.MultiItemTypeAdapter;
-import com.zhy.adapter.recyclerview.base.ViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,9 +35,6 @@ import in.srain.cube.views.ptr.PtrUIHandler;
 import in.srain.cube.views.ptr.header.MaterialHeader;
 import retrofit2.Call;
 import retrofit2.Response;
-
-import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
-import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 /**
  * Author: jzyu
@@ -65,10 +60,6 @@ public abstract class SeedPtrRecyclerViewFragment<T, API_SET_CLASS> extends Seed
 
     protected abstract void onLoadData(API_SET_CLASS apiSetClass, final boolean isRefresh);
     protected abstract List<T> onProvideItemsInResponse(Response response);
-
-    protected interface RowConvert<T> {
-        void onRowConvert(ViewHolder holder, final T item, int position);
-    }
 
     public interface ListLoader<T> {
         List<T> onLoadList();
@@ -99,7 +90,7 @@ public abstract class SeedPtrRecyclerViewFragment<T, API_SET_CLASS> extends Seed
         private boolean disableNorMoreTip;
         private boolean disablePtrAnimation; // 刷新数据时不显示下拉刷新动画，界面：私信聊天、图片详情
 
-        private int dataPageLength = 50;//Consts.PAGE_LENGTH; todo
+        private int dataPageLength = 30;//Consts.PAGE_LENGTH;
 
         private String emptyTip = "暂无内容";
         private IRvEmpty emptyView;
@@ -257,23 +248,12 @@ public abstract class SeedPtrRecyclerViewFragment<T, API_SET_CLASS> extends Seed
         return view;
     }
 
-    private static PtrUIHandler newPtrUIMaterial(Context context, PtrFrameLayout ptrContainer) {
-        MaterialHeader header = new MaterialHeader(context);
-
-        header.setLayoutParams(new PtrFrameLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT));
-        header.setPadding(0, SeedUtil.dp2px(context, 12), 0, SeedUtil.dp2px(context, 12));
-        header.setPtrFrameLayout(ptrContainer);
-        header.setColorSchemeColors(context.getResources().getIntArray(R.array.seed_google_colors));
-
-        return header;
-    }
-
     final protected void init(final Config<T> config) {
         if (config.ptrUIHandler == null) {
             // 注意：因这行代码有副作用 mPtrFrameLayout.setRefreshCompleteHook(mPtrUIHandlerHook);
             // 导致设过 Material PtrUI 就不能换其他 PtrUI，否则 下拉刷新动画一直转；
             // 所以把它留做默认
-            config.ptrUIHandler = newPtrUIMaterial(getContext(), ptrFrame);
+            config.ptrUIHandler = SeedUtil.newPtrUIMaterial(getContext(), ptrFrame);
         }
 
         this.config = config;
@@ -684,6 +664,7 @@ public abstract class SeedPtrRecyclerViewFragment<T, API_SET_CLASS> extends Seed
                 } else {
                     // new item is empty
                     if (isRefresh) {
+                        cbBeforeUpdate(response, newItems);
                         getItems().clear();
                         getRvAdapter().notifyDataSetChanged();
                         cbAfterUpdate(response);
@@ -712,6 +693,12 @@ public abstract class SeedPtrRecyclerViewFragment<T, API_SET_CLASS> extends Seed
                 }
             }
 
+            private void cbUpdateError(int responseCode, String errorMsg) {
+                if (callback != null) {
+                    callback.onUpdateError(responseCode, errorMsg);
+                }
+            }
+
             private void updateAllData(Response<API_DATA_TYPE> response, List<T> newItems) {
                 cbBeforeUpdate(response, newItems);
 
@@ -724,6 +711,8 @@ public abstract class SeedPtrRecyclerViewFragment<T, API_SET_CLASS> extends Seed
 
             @Override
             public void onError(int responseCode, String errorMsg) {
+                cbUpdateError(responseCode, errorMsg);
+
                 if (isLoadNetworkCache && responseCode == SeedConsts.HTTP_STATUS_CODE_CACHE_IS_EMPTY) {
                     hideLoadingView();
 
@@ -761,5 +750,9 @@ public abstract class SeedPtrRecyclerViewFragment<T, API_SET_CLASS> extends Seed
 
     final public boolean isLoading() {
         return ptrFrame.isRefreshing() || isLoadingLocked;
+    }
+
+    public RecyclerViewFinal getRecyclerView() {
+        return recyclerView;
     }
 }
